@@ -113,7 +113,7 @@ pipeline {
              helm repo update
 
              helm upgrade wordsmith-front-preview wordsmith/wordsmith-front --version ${APPLICATION_VERSION} --install --namespace preview --wait \
-                --set ingress.hosts[0]=${APP_HOST},image.pullPolicy=Always
+                --set ingress.hosts[0]=${APP_HOST},apiUrl=api.preview.wordsmith.beescloud.com,image.pullPolicy=Always
             """
         }
         container('kubectl') {

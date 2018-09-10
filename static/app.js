@@ -1,6 +1,7 @@
 "use strict";
 
 var lab = angular.module('lab', []);
+var apiUrl = process.env.apiUrl.replace(/\/$/, "");
 
 lab.controller('LabCtrl', function ($scope, $http, $timeout) {
   $scope.noun1 = "";
@@ -9,21 +10,21 @@ lab.controller('LabCtrl', function ($scope, $http, $timeout) {
   $scope.adjective2 = "";
   $scope.verb = "";
 
-  getWord($http, $timeout, '/words/noun', function(resp) {
+  getWord($http, $timeout, apiUrl+'/noun', function(resp) {
     $scope.noun1 = word(resp);
   });
-  getWord($http, $timeout, '/words/noun', function(resp) {
+  getWord($http, $timeout, apiUrl+'/noun', function(resp) {
     $scope.noun2 = word(resp);
   });
-  getWord($http, $timeout, '/words/adjective', function(resp) {
+  getWord($http, $timeout, apiUrl+'/adjective', function(resp) {
     var adj = word(resp);
     adj.word = adj.word.charAt(0).toUpperCase() + adj.word.substr(1)
     $scope.adjective1 = adj;
   });
-  getWord($http, $timeout, '/words/adjective', function(resp) {
+  getWord($http, $timeout, apiUrl+'/adjective', function(resp) {
     $scope.adjective2 = word(resp);
   });
-  getWord($http, $timeout, '/words/verb', function(resp) {
+  getWord($http, $timeout, apiUrl+'/verb', function(resp) {
     $scope.verb = word(resp);
   });
 });

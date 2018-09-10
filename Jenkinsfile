@@ -42,11 +42,11 @@ pipeline {
             writeFile(file: 'VERSION', text: APPLICATION_VERSION)
         }
         container('go') {
-          sh 'go build -o wordsmith-front dispatcher.go'
+          sh 'go build dispatcher.go'
           sh """
             sed -e "s/{{version}}/${APPLICATION_VERSION}/" wordsmith-front/values.yaml
           """
-          archiveArtifacts artifacts: "wordsmith-front", fingerprint: true
+          archiveArtifacts artifacts: "dispatcher", fingerprint: true
         }
       }
     }

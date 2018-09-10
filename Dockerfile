@@ -1,7 +1,7 @@
 FROM alpine:edge
 
-COPY wordsmith-front /
+COPY dispatcher /
 COPY static /static/
 
 EXPOSE 80
-CMD ["/wordsmith-front"]
+CMD ["/dispatcher"]

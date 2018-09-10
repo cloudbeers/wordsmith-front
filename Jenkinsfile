@@ -19,6 +19,11 @@ pipeline {
       volumeMounts:
         - mountPath: /var/run/docker.sock
           name: docker-sock
+    - name: helm
+      image: devth/helm
+      command:
+      - cat
+      tty: true
     volumes:
       - name: docker-sock
         hostPath:
@@ -37,8 +42,11 @@ pipeline {
             writeFile(file: 'VERSION', text: APPLICATION_VERSION)
         }
         container('go') {
-          sh 'go build dispatcher.go'
-          archiveArtifacts artifacts: "dispatcher", fingerprint: true
+          sh 'go build dispatcher.go -o wordsmith-front'
+          sh """
+            sed -e "s/{{version}}/${APPLICATION_VERSION}/" wordsmith-front/values.yaml
+          """
+          archiveArtifacts artifacts: "wordsmith-front", fingerprint: true
         }
       }
     }
@@ -56,6 +64,22 @@ pipeline {
              docker build -t ${DOCKER_HUB_CREDS_USR}/wordsmith-front:${APPLICATION_VERSION} .
              docker push ${DOCKER_HUB_CREDS_USR}/wordsmith-front:${APPLICATION_VERSION}
            """
+        }
+      }
+    }
+    stage('Build Helm chart') {
+      steps {
+        container('helm') {
+          script {
+            APPLICATION_VERSION = readFile("VERSION")
+          }
+          sh """
+             # create helm chart version
+             helm package wordsmith-front
+             # upload helm chart
+             curl --data-binary "@wordsmith-front-${APPLICATION_VERSION}.tgz" http://chartmuseum-chartmuseum.core.svc.cluster.local:8080/api/charts
+             """
+          archiveArtifacts artifacts: "wordsmith-front-${APPLICATION_VERSION}.tgz", fingerprint: true
         }
       }
     }

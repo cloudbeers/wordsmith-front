@@ -38,6 +38,7 @@ pipeline {
       steps {
         container('go') {
           sh 'go build dispatcher.go'
+          archiveArtifacts artifacts: "dispatcher", fingerprint: true
         }
       }
     }

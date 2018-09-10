@@ -42,7 +42,7 @@ pipeline {
             writeFile(file: 'VERSION', text: APPLICATION_VERSION)
         }
         container('go') {
-          sh 'go build dispatcher.go -o wordsmith-front'
+          sh 'go build -o wordsmith-front dispatcher.go'
           sh """
             sed -e "s/{{version}}/${APPLICATION_VERSION}/" wordsmith-front/values.yaml
           """

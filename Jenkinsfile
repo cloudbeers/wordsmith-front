@@ -34,7 +34,7 @@ pipeline {
         script {
             def now = new Date()
             APPLICATION_VERSION = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
-            writeFile('VERSION', APPLICATION_VERSION)
+            writeFile(file: 'VERSION', text: APPLICATION_VERSION)
         }
         container('go') {
           sh 'go build dispatcher.go'

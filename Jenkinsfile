@@ -38,7 +38,7 @@ pipeline {
       steps {
         script {
             def now = new Date()
-            APPLICATION_VERSION = now.format("yyyyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
+            APPLICATION_VERSION = now.format("yyyyMMdd:HHmm", TimeZone.getTimeZone('UTC'))
             writeFile(file: 'VERSION', text: APPLICATION_VERSION)
         }
         container('go') {

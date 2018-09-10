@@ -51,6 +51,7 @@ pipeline {
         }
       }
     }
+
     stage('Build Docker image') {
       environment {
         DOCKER_HUB_CREDS = credentials('hub.docker.com')
@@ -68,6 +69,7 @@ pipeline {
         }
       }
     }
+
     stage('Build Helm chart') {
       steps {
         container('helm') {
@@ -84,6 +86,34 @@ pipeline {
         }
       }
     }
+
+    stage('Deploy to Preview Environment') {
+      environment {
+         APP_HOST = 'front.preview.wordsmith.beescloud.com'
+      }
+      steps {
+        container('helm') {
+          script {
+            APPLICATION_VERSION = readFile("VERSION")
+          }
+          sh """
+
+             helm init --client-only
+             helm repo add wordsmith http://chartmuseum-chartmuseum.core.svc.cluster.local:8080
+             helm repo update
+
+             helm upgrade wordsmith-front-preview wordsmith/wordsmith-front --version ${APPLICATION_VERSION} --install --namespace preview --wait \
+                --set ingress.hosts[0]=${APP_HOST},image.pullPolicy=Always
+            """
+        } // container
+        container('kubectl') {
+          sh """
+            kubectl describe deployment wordsmith-front-preview-wordsmith-api --namespace preview
+            kubectl get ingress wordsmith-front-preview-wordsmith-front --namespace preview
+          """
+        } // container
+      } // steps
+    } // stage
   }
 }
 

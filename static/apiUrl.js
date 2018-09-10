@@ -1,1 +1,0 @@
-var apiUrl = '{{version}}'

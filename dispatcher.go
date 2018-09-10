@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net"
 	"net/http"
+	"os"
 	"time"
 )
 
@@ -16,7 +17,9 @@ var version string
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	fwd := &forwarder{"words", 8080}
+	apiUrl := os.Getenv("apiUrl")
+
+	fwd := &forwarder{apiUrl, 443}
 	http.Handle("/words/", http.StripPrefix("/words", fwd))
 	http.Handle("/", http.FileServer(http.Dir("static")))
 	http.HandleFunc("/version", whichVersion)

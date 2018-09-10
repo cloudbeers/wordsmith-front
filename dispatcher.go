@@ -8,7 +8,6 @@ import (
 	"math/rand"
 	"net"
 	"net/http"
-	"os"
 	"time"
 )
 
@@ -17,9 +16,7 @@ var version string
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
-	apiUrl := os.Getenv("apiUrl")
-
-	fwd := &forwarder{apiUrl, 443}
+	fwd := &forwarder{"wordsmith-api", 80}
 	http.Handle("/words/", http.StripPrefix("/words", fwd))
 	http.Handle("/", http.FileServer(http.Dir("static")))
 	http.HandleFunc("/version", whichVersion)

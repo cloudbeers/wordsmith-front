@@ -44,7 +44,8 @@ pipeline {
         container('go') {
           sh 'go build dispatcher.go'
           sh """
-            sed -e "s/{{version}}/${APPLICATION_VERSION}/" wordsmith-front/values.yaml
+            sed -e "s/{{version}}/${APPLICATION_VERSION}/" wordsmith-front/values.yaml >  wordsmith-front/values.yaml
+            sed -e "s/{{version}}/${APPLICATION_VERSION}/" wordsmith-front/Chart.yaml >  wordsmith-front/Chart.yaml
           """
           archiveArtifacts artifacts: "dispatcher", fingerprint: true
         }

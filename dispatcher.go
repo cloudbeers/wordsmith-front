@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -10,14 +11,18 @@ import (
 	"time"
 )
 
+var version string
+
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
 	fwd := &forwarder{"words", 8080}
 	http.Handle("/words/", http.StripPrefix("/words", fwd))
 	http.Handle("/", http.FileServer(http.Dir("static")))
+	http.HandleFunc("/version", whichVersion)
 
 	fmt.Println("Listening on port 80")
+	fmt.Println("Running version " + version)
 	http.ListenAndServe(":80", nil)
 }
 
@@ -63,4 +68,12 @@ func copy(url, ip string, w http.ResponseWriter) error {
 
 	_, err = w.Write(buf)
 	return err
+}
+
+func whichVersion(w http.ResponseWriter, r *http.Request) {
+
+	js := `{ "version": "` + version + `" }`
+
+	w.Header().Set("Content-Type", "application/json")
+	io.WriteString(w, js)
 }

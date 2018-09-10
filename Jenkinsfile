@@ -118,8 +118,8 @@ pipeline {
         }
         container('kubectl') {
           sh """
-            kubectl describe deployment wordsmith-front-preview-wordsmith-front --namespace preview
-            kubectl get ingress wordsmith-front-preview-wordsmith-front --namespace preview
+            kubectl describe deployment wordsmith-front-preview --namespace preview
+            kubectl get ingress wordsmith-front-preview --namespace preview
           """
         }
         container('curl') {

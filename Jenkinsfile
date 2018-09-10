@@ -30,12 +30,12 @@ pipeline {
 
   stages {
     stage('Build component') {
-      script {
+      steps {
+        script {
             def now = new Date()
             APPLICATION_VERSION = now.format("yyMMdd.HHmm", TimeZone.getTimeZone('UTC'))
             writeFile('VERSION', APPLICATION_VERSION)
-          }
-      steps {
+        }
         container('go') {
           sh 'go build dispatcher.go'
           archiveArtifacts artifacts: "dispatcher", fingerprint: true

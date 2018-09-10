@@ -60,6 +60,7 @@ pipeline {
           sh """
             sed -i.bak -e "s/{{version}}/${APPLICATION_VERSION}/" wordsmith-front/values.yaml
             sed -i.bak -e "s/{{version}}/${APPLICATION_VERSION}/" wordsmith-front/Chart.yaml
+            sed -i.bak -e "s/{{version}}/${APPLICATION_VERSION}/" static/apiUrl.js
           """
           archiveArtifacts artifacts: "dispatcher", fingerprint: true
         }

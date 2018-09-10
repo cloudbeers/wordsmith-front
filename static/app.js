@@ -1,7 +1,6 @@
 "use strict";
 
 var lab = angular.module('lab', []);
-var apiUrl = process.env.apiUrl.replace(/\/$/, "");
 
 lab.controller('LabCtrl', function ($scope, $http, $timeout) {
   $scope.noun1 = "";

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -11,8 +12,6 @@ import (
 	"time"
 )
 
-var version string
-
 func main() {
 	rand.Seed(time.Now().UnixNano())
 
@@ -22,7 +21,6 @@ func main() {
 	http.HandleFunc("/version", whichVersion)
 
 	fmt.Println("Listening on port 80")
-	fmt.Println("Running version " + version)
 	http.ListenAndServe(":80", nil)
 }
 
@@ -72,7 +70,15 @@ func copy(url, ip string, w http.ResponseWriter) error {
 
 func whichVersion(w http.ResponseWriter, r *http.Request) {
 
-	js := `{ "version": "` + version + `" }`
+	version, err := ioutil.ReadFile("VERSION")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	currentVersion := bytes.IndexByte(version, 0)
+	fmt.Printf("Running version: %s", currentVersion)
+
+	js := fmt.Sprintf("{ \"version\": \"%s\" }", currentVersion)
 
 	w.Header().Set("Content-Type", "application/json")
 	io.WriteString(w, js)

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -70,12 +69,12 @@ func copy(url, ip string, w http.ResponseWriter) error {
 
 func whichVersion(w http.ResponseWriter, r *http.Request) {
 
-	version, err := ioutil.ReadFile("VERSION")
+	version, err := ioutil.ReadFile("/VERSION")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	currentVersion := bytes.IndexByte(version, 0)
+	currentVersion := string(version)
 	fmt.Printf("Running version: %s", currentVersion)
 
 	js := fmt.Sprintf("{ \"version\": \"%s\" }", currentVersion)

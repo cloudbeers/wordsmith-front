@@ -22,6 +22,8 @@ spec:
       tty: true
 """
     ) {
+  echo 'Version broken : 20180912.1156'
+  echo 'Version NOT broken : 20180912.1205'
   userInput = input message: 'Application Version', ok: 'Deploy', parameters: [string(description: 'Wordsmith FRONT Helm Chart Version', name: 'Wordsmith Front Version', trim: true)], submitterParameter: 'submitter'
   APPLICATION_VERSION = userInput['Wordsmith Front Version']
   echo("application version: $APPLICATION_VERSION")

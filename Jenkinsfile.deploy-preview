@@ -50,7 +50,6 @@ spec:
         } // container
         container('curl') {
           script {
-            APPLICATION_VERSION = readFile("VERSION")
             APPLICATION_CODE = sh (script: "curl --write-out %{http_code} --silent --output /dev/null https://front.preview.wordsmith.beescloud.com/version",
               returnStdout: true
             ).trim()

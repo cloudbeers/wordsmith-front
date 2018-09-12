@@ -134,7 +134,7 @@ pipeline {
             ).trim()
 
             // Let's retry multiple times if return code is not 200
-            if (${APPLICATION_CODE} != "200") {
+            if (APPLICATION_CODE != "200") {
               retry(3) {
                 sleep(5)
                 APPLICATION_CODE = sh (
@@ -144,7 +144,7 @@ pipeline {
               }
             }
             // Raise an exception if application does not respond HTTP code 200 on /version
-            if (${APPLICATION_CODE} != "200") { 
+            if (APPLICATION_CODE != "200") { 
               error('An error occured during the deployment, application is not responding after the deployment')
               // TODO: notify JIRA that deployment failed
               throw new Exception("Deployment failed, application is not responding on /version")

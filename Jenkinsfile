@@ -135,13 +135,13 @@ pipeline {
               returnStdout: true
             ).trim()
 
+            // Let's retry multiple times if return code is not 200
             if (${APPLICATION_CODE} != "200") {
               retry(3) {
-                sleep (5) {
-                  APPLICATION_CODE = sh ("curl --write-out %{http_code} --silent --output /dev/null https://front.preview.wordsmith.beescloud.com/version",
-                    returnStdout: true
-                  ).trim()
-                }
+                sleep(5)
+                APPLICATION_CODE = sh ("curl --write-out %{http_code} --silent --output /dev/null https://front.preview.wordsmith.beescloud.com/version",
+                  returnStdout: true
+                ).trim()
               }
             }
             // Raise an exception if application does not respond HTTP code 200 on /version

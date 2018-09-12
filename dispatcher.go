@@ -17,7 +17,7 @@ func main() {
 	fwd := &forwarder{"wordsmith-api", 80}
 	http.Handle("/words/", http.StripPrefix("/words", fwd))
 	http.Handle("/", http.FileServer(http.Dir("static")))
-	http.HandleFunc("/version", whichVersion)
+	http.HandleFunc("/version2", whichVersion)
 
 	fmt.Println("Listening on port 80")
 	http.ListenAndServe(":80", nil)

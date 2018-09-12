@@ -16,4 +16,6 @@ spec:
       name: http
   selector:
     app: {{ include "wordsmith-front.name" . }}
+    {{- if .Values.service.selectByRelease -}}
     release: {{ .Release.Name }}
+    {{- end }}

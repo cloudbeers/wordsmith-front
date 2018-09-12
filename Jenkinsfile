@@ -128,9 +128,28 @@ pipeline {
           """
         }
         container('curl') {
-          sh """
-            curl -v https://front.preview.wordsmith.beescloud.com/version
-          """
+          APPLICATION_CODE = sh ("""
+            curl --write-out %{http_code} --silent --output /dev/null https://front.preview.wordsmith.beescloud.com/version
+          """,
+            returnStdout: true
+          ).trim()
+          if (${APPLICATION_CODE} != "200") {
+            retry(3) {
+              sleep (5)
+              APPLICATION_CODE = sh ("""
+                curl --write-out %{http_code} --silent --output /dev/null https://front.preview.wordsmith.beescloud.com/version
+              """,
+                returnStdout: true
+              ).trim()
+            }
+          }
+          // Raise an exception if application does not respond HTTP code 200 on /version
+          if (${APPLICATION_CODE} != "200") { 
+            echo 'An error occured during the deployment, application is not responding after the deployment'
+            // TODO: notify JIRA that deployment failed
+          } else {
+            echo 'Deployment was successful'
+          }
         }
       }
     }

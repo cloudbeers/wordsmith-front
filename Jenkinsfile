@@ -92,6 +92,7 @@ pipeline {
           }
           sh """
              # create helm chart version
+             helm lint wordsmith-front
              helm package wordsmith-front
              # upload helm chart
              curl --data-binary "@wordsmith-front-${APPLICATION_VERSION}.tgz" http://chartmuseum-chartmuseum.core.svc.cluster.local:8080/api/charts

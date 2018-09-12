@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: cleclerc/wordsmith-front
-  tag: {{version}}
+  tag: "{{version}}"
   pullPolicy: IfNotPresent
 
 nameOverride: ""

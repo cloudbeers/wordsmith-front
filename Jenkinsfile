@@ -129,6 +129,7 @@ pipeline {
         }
         container('curl') {
           script {
+            APPLICATION_VERSION = readFile("VERSION")
             APPLICATION_CODE = sh (script: "curl --write-out %{http_code} --silent --output /dev/null https://front.preview.wordsmith.beescloud.com/version",
               returnStdout: true
             ).trim()
@@ -146,7 +147,14 @@ pipeline {
             // Raise an exception if application does not respond HTTP code 200 on /version
             if (APPLICATION_CODE != "200") { 
               error('An error occured during the deployment, application is not responding after the deployment')
-              // TODO: notify JIRA that deployment failed
+              def deploymentIssue = [fields: [
+                               project: [key: 'WOR'],
+                               summary: "Deployment failure: ${APPLICATION_VERSION}",
+                               description: "Please go to ${BUILD_URL} and verify the deployment logs",
+                               issuetype: [name: 'Bug']]]
+
+                  jiraResponse = jiraNewIssue issue: deploymentIssue
+              echo "https://jira.beescloud.com/projects/WOR/issues/${jiraResponse.data.key}"
               throw new Exception("Deployment failed, application is not responding on /version")
             } else {
               echo 'Deployment was successful'

@@ -128,13 +128,13 @@ pipeline {
           """
         }
         container('curl') {
-          APPLICATION_CODE = sh ("""
-            curl --write-out %{http_code} --silent --output /dev/null https://front.preview.wordsmith.beescloud.com/version
-          """,
-            returnStdout: true
-          ).trim()
-          
           script {
+            APPLICATION_CODE = sh ("""
+              curl --write-out %{http_code} --silent --output /dev/null https://front.preview.wordsmith.beescloud.com/version
+            """,
+              returnStdout: true
+            ).trim()
+
             if (${APPLICATION_CODE} != "200") {
               retry(3) {
                 sleep (5)

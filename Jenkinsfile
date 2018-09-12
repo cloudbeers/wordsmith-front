@@ -146,7 +146,6 @@ pipeline {
             }
             // Raise an exception if application does not respond HTTP code 200 on /version
             if (APPLICATION_CODE != "200") { 
-              error('An error occured during the deployment, application is not responding after the deployment')
               def deploymentIssue = [fields: [
                                project: [key: 'WOR'],
                                summary: "Deployment failure: ${APPLICATION_VERSION}",
@@ -155,6 +154,7 @@ pipeline {
 
                   jiraResponse = jiraNewIssue issue: deploymentIssue
               echo "https://jira.beescloud.com/projects/WOR/issues/${jiraResponse.data.key}"
+              error('An error occured during the deployment, application is not responding after the deployment')
               throw new Exception("Deployment failed, application is not responding on /version")
             } else {
               echo 'Deployment was successful'
